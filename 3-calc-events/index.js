@@ -1,7 +1,6 @@
 let firstNum = Number(process.argv[2]);
 let secondNum = Number(process.argv[3]);
 let operation = process.argv[4];
-let sign = process.argv[5]
 
 const EventEmmiter = require('events');
 const calcEmmiter = new EventEmmiter();
