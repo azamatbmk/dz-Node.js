@@ -24,4 +24,4 @@ calcEmmiter.on(operation, (firstNum, secondNum) => {
     }  
 })
     
-calcEmmiter.emit(operation, firstNum, secondNum)
+calcEmmiter.emit(operation, firstNum, secondNum);

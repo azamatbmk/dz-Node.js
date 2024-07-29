@@ -15,6 +15,6 @@ function setTimer(seconds, minutes, hours) {
     setTimeout(() => { 
         console.log('Прошло ' + time + ' миллисекунд')
     }, time)
-}
+};
 
-setTimer(seconds, minutes, hours)
+setTimer(seconds, minutes, hours);
