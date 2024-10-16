@@ -32,12 +32,12 @@ const saveCity = async (city, city2, city3) => {
     }
 };
 
-const getForcast = async () => {
+const getForcast = async (lng) => {
     try {
         for (const key in TOKEN_DICTIONARY) {
             if (key.charAt(0) == 'c') {
                 const city = await getKeyValue(key);
-                const weather = await getWeather(city);
+                const weather = await getWeather(city, lng);
                 printWeather(weather)    
             };
         };
@@ -63,6 +63,9 @@ const initCLI = () => {
     }
     if (args.t) {
         return saveToken(args.t);
+    }
+    if (args.lng) {
+        return getForcast(args.lng)
     }
     return getForcast();
 };

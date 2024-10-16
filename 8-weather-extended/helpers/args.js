@@ -14,6 +14,8 @@ const getArgs = (args) => {
             } else {
                 res[value.substring(1)] = true;
             }
+        } else {
+            res.lng = array[0];
         }
     });
     return res;
