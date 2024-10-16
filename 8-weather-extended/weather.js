@@ -34,15 +34,14 @@ const saveCity = async (city, city2, city3) => {
 
 const getForcast = async () => {
     try {
-        const city = await getKeyValue(TOKEN_DICTIONARY.city);
-        const city2 = await getKeyValue(TOKEN_DICTIONARY.city2);
-        const city3 = await getKeyValue(TOKEN_DICTIONARY.city3);
-        const weather = await getWeather(city);
-        const weather2 = await getWeather(city2);
-        const weather3 = await getWeather(city3);
-        printWeather(weather)
-        printWeather(weather2)
-        printWeather(weather3)
+        for (const key in TOKEN_DICTIONARY) {
+            if (key.charAt(0) == 'c') {
+                const city = await getKeyValue(key);
+                const weather = await getWeather(city);
+                printWeather(weather)    
+            };
+        };
+       
     } catch (e) {
         if (e?.response?.status == 404) {
             printError('Неверно указан город');
@@ -52,7 +51,7 @@ const getForcast = async () => {
             printError(e.message);
         }
     }
-}
+};
 
 const initCLI = () => {
     const args = getArgs(process.argv);
