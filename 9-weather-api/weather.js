@@ -7,15 +7,9 @@ import { getKeyValue, saveKeyValue, TOKEN_DICTIONARY } from './services/storage.
 
 const app = express();
 const port = 8080;
-const weatherApi = async () => {
-    const dataWeather = await getWeather('moscow');
-    return dataWeather;
-}
 
-console.log(await weatherApi())
-
-app.get('/weather', (req, res) => {
-    res.send('hr');
+app.get('/weather', async (req, res) => {
+    res.send(await getWeather('moscow'));
  });
 
 app.listen(port, () => {
