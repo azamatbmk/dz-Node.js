@@ -9,14 +9,6 @@ import { weatherRouter } from './router/routes.js';
 const app = express();
 const port = 8080;
 
-// app.get('/weather', async (req, res) => {
-//     try {
-//         res.send(await getWeather('moscow'));   
-//     } catch (error) {
-//         console.log('Не правильно задан город или сервер не доступен')
-//     }
-//  });
-
  app.use('/weather', weatherRouter);
 
  app.use((err, req, res, next) => {
