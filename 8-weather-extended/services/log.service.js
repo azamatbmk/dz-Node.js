@@ -22,7 +22,7 @@ const printHelp = () => {
 
 const printWeather = (res) => {
     if(!res) {
-        console.log('Данные не валтдны')
+        console.log('Данные не валидны')
     }
     console.log(
         dedent`${chalk.bgYellow(' WEATHER ')} Погода в городе ${res.name}
