@@ -4,12 +4,24 @@ import { getWeather } from './services/api.service.js';
 import  express  from 'express';
 import { printHelp, printSuccess, printError, printWeather } from './services/log.service.js';
 import { getKeyValue, saveKeyValue, TOKEN_DICTIONARY } from './services/storage.service.js';
+import { weatherRouter } from './router/routes.js';
 
 const app = express();
 const port = 8080;
 
 app.get('/weather', async (req, res) => {
-    res.send(await getWeather('moscow'));
+    try {
+        res.send(await getWeather('moscow'));   
+    } catch (error) {
+        console.log('Не правильно задан город или сервер не доступен')
+    }
+ });
+
+ app.use('/weather', weatherRouter);
+
+ app.use((err, req, res, next) => {
+    console.log(err.message);
+    res.status(500).send(err.message);
  });
 
 app.listen(port, () => {
