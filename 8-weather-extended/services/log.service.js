@@ -21,6 +21,9 @@ const printHelp = () => {
 };
 
 const printWeather = (res) => {
+    if(!res) {
+        console.log('Данные не валтдны')
+    }
     console.log(
         dedent`${chalk.bgYellow(' WEATHER ')} Погода в городе ${res.name}
         ${res.weather[0].description}
@@ -28,7 +31,7 @@ const printWeather = (res) => {
         Влажность: ${res.main.humidity}%
         Скорость ветра: ${res.wind.speed}
         `
-    )
+    ) 
 };
 
 export { printError, printSuccess, printHelp, printWeather };
