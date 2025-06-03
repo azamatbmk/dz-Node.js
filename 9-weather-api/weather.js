@@ -12,8 +12,8 @@ const port = 8080;
  app.use('/weather', weatherRouter);
 
  app.use((err, req, res, next) => {
-    console.log(err.message);
-    res.status(500).send(err.message);
+    console.log('err.message');
+    res.status(500).send('err.message');
  });
 
 app.listen(port, () => {

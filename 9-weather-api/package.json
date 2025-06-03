@@ -17,6 +17,7 @@
   "author": "Azamat Kudziev",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.9.0",
     "chalk": "^5.3.0",
     "dedent-js": "^1.0.1",
     "express": "^4.21.1"

@@ -7,16 +7,20 @@ const getWeather = async (city, language = 'en') => {
     if (!token) {
         throw new Error('Не задан ключ API, задайте его через команду -t [API_KEY]');
     }
-    const { data } = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
-        params: {
-            q: city,
-            appid: token,
-            lang: language,
-            units:'metric'
-        }
-    });
-    console.log(data)
-    return data;
+    try {
+        const { data } = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
+            params: {
+                q: city,
+                appid: token,
+                lang: language,
+                units:'metric'
+            }
+        });
+        return data;
+    } catch (error) {
+        console.error(error.response.data);
+        return 'Город не найден';
+    }
 };
 
 
