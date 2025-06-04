@@ -4,7 +4,11 @@ import { getWeather } from '../services/api.service.js';
 const weatherRouter = express.Router();
 
 weatherRouter.get('/:city', async (req, res) => {
-    res.send(await getWeather(req.params.city));
+    const weather = await getWeather(req.params.city);
+    if (!weather) {
+       return res.send('Город не найден')
+    }
+    res.send(weather);
 });
 
 export { weatherRouter };
