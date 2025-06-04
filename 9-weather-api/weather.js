@@ -38,10 +38,16 @@ const saveCity = async (city, city2, city3) => {
         printError('Не передан город');
         return;
     }
+    if (city.includes(',')) {
+        const cities = city.split(',')
+        cities.forEach(async (value, index) => {
+            await saveKeyValue (TOKEN_DICTIONARY.city + index, value)
+        })
+    }
     try {
-        await saveKeyValue (TOKEN_DICTIONARY.city, city);
-        await saveKeyValue (TOKEN_DICTIONARY.city2, city2);
-        await saveKeyValue (TOKEN_DICTIONARY.city3, city3)
+        // await saveKeyValue (TOKEN_DICTIONARY.city, city);
+        // await saveKeyValue (TOKEN_DICTIONARY.city2, city2);
+        // await saveKeyValue (TOKEN_DICTIONARY.city3, city3)
         printSuccess('Города сохранены');
     } catch (e) {
         printError(e.message);
