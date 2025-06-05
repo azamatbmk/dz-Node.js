@@ -16,6 +16,7 @@ const getWeather = async (city, language = 'ru') => {
                 units:'metric'
             }
         });
+        console.log(data)
         return data;
     } catch (error) {
         console.error(error.response.data);

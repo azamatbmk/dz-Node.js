@@ -33,25 +33,28 @@ const saveToken = async (token) => {
     }
 };
 
-const saveCity = async (city, city2, city3) => {
+const saveCity = async (city) => {
     if (!city.length) {
         printError('Не передан город');
         return;
     }
     if (city.includes(',')) {
         const cities = city.split(',')
-        cities.forEach(async (value, index) => {
-            await saveKeyValue (TOKEN_DICTIONARY.city + index, value)
-        })
+        for (const [index, city] of cities.entries()) {
+            try {
+                // await saveKeyValue (TOKEN_DICTIONARY.city, city);
+                // await saveKeyValue (TOKEN_DICTIONARY.city2, city2);
+                // await saveKeyValue (TOKEN_DICTIONARY.city3, city3)
+                // console.log(index, city)
+                await saveKeyValue (TOKEN_DICTIONARY.city + index, city)
+                printSuccess('Города сохранены');
+                console.log(TOKEN_DICTIONARY)
+            } catch (e) {
+                printError(e.message);
+            }
+        }
     }
-    try {
-        // await saveKeyValue (TOKEN_DICTIONARY.city, city);
-        // await saveKeyValue (TOKEN_DICTIONARY.city2, city2);
-        // await saveKeyValue (TOKEN_DICTIONARY.city3, city3)
-        printSuccess('Города сохранены');
-    } catch (e) {
-        printError(e.message);
-    }
+    
 };
 
 const getForcast = async (lng) => {
@@ -60,6 +63,7 @@ const getForcast = async (lng) => {
             if (key.charAt(0) == 'c') {
                 const city = await getKeyValue(key);
                 const weather = await getWeather(city, lng);
+                console.log(city)
                 printWeather(weather)    
             };
         };
@@ -81,7 +85,7 @@ const initCLI = () => {
        return printHelp();
     }
     if (args.s) {
-        return saveCity(args.s, args.s2, args.s3);
+        return saveCity(args.s);
     }
     if (args.t) {
         return saveToken(args.t);
