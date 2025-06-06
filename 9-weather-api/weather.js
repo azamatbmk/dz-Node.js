@@ -56,8 +56,8 @@ const getForcast = async (lng) => {
             if (key.charAt(0) == 'c') {
                 const cities = await getKeyValue(key);
                 for (const city of cities) {
-                    const weather = await getWeather(city, lng);
-                    printWeather(weather)    
+                    await getWeather(city, lng);
+                    // printWeather(weather)    
                 }
             };
         };
