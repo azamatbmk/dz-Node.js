@@ -12,13 +12,14 @@ const port = 8080;
  app.use('/weather', weatherRouter);
 
  app.use((err, req, res, next) => {
-    console.log('err.message');
     res.status(500).send('err.message');
  });
 
 app.listen(port, () => {
     console.log(`Сервер запущен на ${port} порту`)
 });
+
+
 
 const saveToken = async (token) => {
     if (!token.length) {
@@ -33,38 +34,31 @@ const saveToken = async (token) => {
     }
 };
 
-const saveCity = async (city) => {
-    if (!city.length) {
+const saveCity = async (cities) => {
+    if (!cities.length) {
         printError('Не передан город');
         return;
     }
-    if (city.includes(',')) {
-        const cities = city.split(',')
-        for (const [index, city] of cities.entries()) {
+    if (cities.includes(',')) {
+        const citiesArr = cities.split(',');
             try {
-                // await saveKeyValue (TOKEN_DICTIONARY.city, city);
-                // await saveKeyValue (TOKEN_DICTIONARY.city2, city2);
-                // await saveKeyValue (TOKEN_DICTIONARY.city3, city3)
-                // console.log(index, city)
-                await saveKeyValue (TOKEN_DICTIONARY.city + index, city)
+                await saveKeyValue (TOKEN_DICTIONARY.cities, citiesArr)
                 printSuccess('Города сохранены');
-                console.log(TOKEN_DICTIONARY)
             } catch (e) {
                 printError(e.message);
             }
-        }
     }
-    
 };
 
 const getForcast = async (lng) => {
     try {
         for (const key in TOKEN_DICTIONARY) {
             if (key.charAt(0) == 'c') {
-                const city = await getKeyValue(key);
-                const weather = await getWeather(city, lng);
-                console.log(city)
-                printWeather(weather)    
+                const cities = await getKeyValue(key);
+                for (const city of cities) {
+                    const weather = await getWeather(city, lng);
+                    printWeather(weather)    
+                }
             };
         };
        
