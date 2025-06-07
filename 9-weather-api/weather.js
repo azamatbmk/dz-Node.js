@@ -128,4 +128,4 @@ const saveCitiesArray = async (cities) => {
 
 // getForcast();
 
-export { saveToken, saveCity }
+export { saveToken }
