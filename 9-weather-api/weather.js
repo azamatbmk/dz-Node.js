@@ -1,15 +1,17 @@
 #!/usr/bin/env node
-import { getArgs } from './helpers/args.js';;
+import { getArgs } from './helpers/args.js';
 import { getWeather } from './services/api.service.js';
 import  express  from 'express';
 import { printHelp, printSuccess, printError, printWeather } from './services/log.service.js';
 import { getKeyValue, saveKeyValue, TOKEN_DICTIONARY } from './services/storage.service.js';
-import { weatherRouter } from './router/routes.js';
+import { settingsRouter, weatherRouter } from './router/routes.js';
 
 const app = express();
 const port = 8080;
 
  app.use('/weather', weatherRouter);
+ app.use('/settings', settingsRouter);
+ 
 
  app.use((err, req, res, next) => {
     res.status(500).send('err.message');
@@ -34,6 +36,7 @@ const saveToken = async (token) => {
     }
 };
 
+
 const saveCity = async (cities) => {
     if (!cities.length) {
         printError('Не передан город');
@@ -50,44 +53,48 @@ const saveCity = async (cities) => {
     }
 };
 
-const getForcast = async (lng) => {
-    try {
-        for (const key in TOKEN_DICTIONARY) {
-            if (key.charAt(0) == 'c') {
-                const cities = await getKeyValue(key);
-                for (const city of cities) {
-                    await getWeather(city, lng);
-                    // printWeather(weather)    
-                }
-            };
-        };
+// const getForcast = async (lng) => {
+//     try {
+//         for (const key in TOKEN_DICTIONARY) {
+//             if (key.charAt(0) == 'c') {
+//                 const cities = await getKeyValue(key);
+//                 for (const city of cities) {
+//                     await getWeather(city, lng);
+//                     // printWeather(weather)    
+//                 }
+//             };
+//         };
        
-    } catch (e) {
-        if (e?.response?.status == 404) {
-            printError('Неверно указан город');
-        } else if (e?.response?.status == 401) {
-            printError('Неверно указан токен')
-        } else {
-            printError(e.message);
-        }
-    }
-};
+//     } catch (e) {
+//         if (e?.response?.status == 404) {
+//             printError('Неверно указан город');
+//         } else if (e?.response?.status == 401) {
+//             printError('Неверно указан токен')
+//         } else {
+//             printError(e.message);
+//         }
+//     }
+// };
 
-const initCLI = () => {
-    const args = getArgs(process.argv);
-    if (args.h) {
-       return printHelp();
-    }
-    if (args.s) {
-        return saveCity(args.s);
-    }
-    if (args.t) {
-        return saveToken(args.t);
-    }
-    if (args.lng) {
-        return getForcast(args.lng)
-    }
-    return getForcast();
-};
+// const initCLI = () => {
+//     const args = getArgs(process.argv);
+//     if (args.h) {
+//        return printHelp();
+//     }
+//     if (args.s) {
+//         return saveCity(args.s);
+//     }
+//     if (args.t) {
+//         return saveToken(args.t);
+//     }
+//     if (args.lng) {
+//         return getForcast(args.lng)
+//     }
+//     return getForcast();
+// };
 
-initCLI();
+// initCLI();
+
+// getForcast();
+
+export { saveToken, saveCity }

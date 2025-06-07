@@ -8,7 +8,6 @@ const getWeather = async (city, language = 'ru') => {
         throw new Error('Не задан ключ API, задайте его через команду -t [API_KEY]');
     }
     try {
-        console.log('в getWeather должен прийти город: ' + city)
         const { data } = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
             params: {
                 q: city,
