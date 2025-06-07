@@ -20,6 +20,8 @@ weatherRouter.get('/:city/:lng?', async (req, res) => {
 settingsRouter.get('/:token', async (req, res) => {
     await saveToken(req.params.token);
     res.send('Token saved')
-})
+});
+
+
 
 export { weatherRouter, settingsRouter };

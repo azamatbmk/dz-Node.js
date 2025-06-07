@@ -11,10 +11,26 @@ const port = 8080;
 
  app.use('/weather', weatherRouter);
  app.use('/settings', settingsRouter);
- 
+
+ app.use(express.json());
+
+ app.post('/weather', async (req, res) => {
+    try {
+        const cities = req.body.cities;
+        saveCitiesArray(cities);
+        const weatherPromises = cities.map(city => getWeather(city));
+        const citiesWeather = await Promise.all(weatherPromises);
+        printSuccess('Погода получена для городов: ' + cities)
+        res.json(citiesWeather)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Ошибка при получении погоды');
+    }
+    
+ })
 
  app.use((err, req, res, next) => {
-    res.status(500).send('err.message');
+    res.status(500).send(err.message);
  });
 
 app.listen(port, () => {
@@ -37,21 +53,36 @@ const saveToken = async (token) => {
 };
 
 
-const saveCity = async (cities) => {
+const saveCitiesArray = async (cities) => {
     if (!cities.length) {
         printError('Не передан город');
         return;
     }
-    if (cities.includes(',')) {
-        const citiesArr = cities.split(',');
-            try {
-                await saveKeyValue (TOKEN_DICTIONARY.cities, citiesArr)
-                printSuccess('Города сохранены');
-            } catch (e) {
-                printError(e.message);
-            }
+    try {
+        await saveKeyValue (TOKEN_DICTIONARY.cities, cities)
+        printSuccess('Города сохранены');
+    } catch (e) {
+        printError(e.message);
     }
+
 };
+
+
+// const saveCity = async (cities) => {
+//     if (!cities.length) {
+//         printError('Не передан город');
+//         return;
+//     }
+//     if (cities.includes(',')) {
+//         const citiesArr = cities.split(',');
+//             try {
+//                 await saveKeyValue (TOKEN_DICTIONARY.cities, citiesArr)
+//                 printSuccess('Города сохранены');
+//             } catch (e) {
+//                 printError(e.message);
+//             }
+//     }
+// };
 
 // const getForcast = async (lng) => {
 //     try {
