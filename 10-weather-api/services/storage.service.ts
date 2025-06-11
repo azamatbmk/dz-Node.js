@@ -4,15 +4,15 @@ import { promises } from 'fs';
 
 const filePath: string = join(homedir(), 'weather-data.json');
 
-interface ITOKEN_DICTIONARY {
-    token: string;
-    cities: string;
-}
+// interface ITOKEN_DICTIONARY {
+//     token: string;
+//     cities: string;
+// }
 
-const TOKEN_DICTIONARY: ITOKEN_DICTIONARY = {
-    token: 'token',
-    cities: 'cities'
-}
+// const TOKEN_DICTIONARY = {
+//     token: 'token',
+//     cities: 'cities'
+// } as const
 
 const saveKeyValue = async (key: string, value: string | string[]) => {
     let data: {[key: string]: string | string[]} = {};
@@ -31,7 +31,7 @@ const getKeyValue = async (key: string) => {
         const data = JSON.parse(file);
         return data[key];
     }
-    return undefined;
+    return null;
 };
 
 const isExist = async (path: string) => {
@@ -43,4 +43,4 @@ const isExist = async (path: string) => {
     }
 }
 
-export { saveKeyValue, getKeyValue, TOKEN_DICTIONARY };
+export { saveKeyValue, getKeyValue };
