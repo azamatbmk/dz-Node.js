@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "dev": "tsx watch --clear-screen=false ./src/main.ts",
+    "dev:inspect": "tsx --inspect-brk ./src/main.ts",
+    "build": "tsc",
     "start": "node ./dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,11 +14,16 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@types/express": "^5.0.3",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
     "express": "^5.1.0",
+    "inversify": "^7.0.0-alpha.5",
+    "reflect-metadata": "^0.2.2",
     "tslog": "^4.9.3"
   }
 }
