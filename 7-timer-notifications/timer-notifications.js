@@ -1,3 +1,5 @@
+const notifier = require('node-notifier');
+
 let seconds = Number(process.argv[2]) * 1000;
 let minutes = Number(process.argv[3]) * 60000;
 let hours = Number(process.argv[4]) * 3600000;
@@ -13,7 +15,10 @@ function setTimer(seconds, minutes, hours) {
         time = seconds + minutes
     }
     setTimeout(() => { 
-        console.log('Прошло ' + time + ' миллисекунд')
+        notifier.notify({
+            title: 'Таймер',
+            message: 'Прошло ' + time + ' миллисекунд'
+        })
     }, time)
 };
 
