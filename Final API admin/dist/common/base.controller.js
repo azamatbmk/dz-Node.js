@@ -32,8 +32,12 @@ let BaseController = class BaseController {
         return res.sendStatus(201);
     }
     bindRoutes(routes) {
+        var _a;
         for (const route of routes) {
-            this.router[route.method](route.path, route.func.bind(this));
+            const handler = route.func.bind(this);
+            const middleware = (_a = route.middlewares) === null || _a === void 0 ? void 0 : _a.map((m) => m.execute.bind(m));
+            const pipeline = middleware ? [...middleware, handler] : handler;
+            this.router[route.method](route.path, pipeline);
             this.logger.info(`[${route.method}] ${route.path}`);
         }
     }

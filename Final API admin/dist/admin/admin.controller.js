@@ -27,13 +27,20 @@ const http_error_1 = require("../errors/http-error");
 require("reflect-metadata");
 const inversify_1 = require("inversify");
 const types_1 = require("../types");
+const admin_register_dto_1 = require("./dto/admin.register.dto");
+const validate_midlleware_1 = require("../common/validate.midlleware");
 let AdminController = class AdminController extends base_controller_1.BaseController {
     constructor(loggerService, adminService) {
         super(loggerService);
         this.loggerService = loggerService;
         this.adminService = adminService;
         this.bindRoutes([
-            { path: '/login', method: 'post', func: this.login },
+            {
+                path: '/login',
+                method: 'post',
+                func: this.login,
+                middlewares: [new validate_midlleware_1.ValidateMidlleware(admin_register_dto_1.AdminRegisterDto)]
+            },
             { path: '/register', method: 'post', func: this.register }
         ]);
     }
@@ -43,9 +50,9 @@ let AdminController = class AdminController extends base_controller_1.BaseContro
     }
     register(_a, res_1, next_1) {
         return __awaiter(this, arguments, void 0, function* ({ body }, res, next) {
-            const newAdmin = yield this.adminService.createAdmin(body);
+            const result = yield this.adminService.createAdmin(body);
             this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`);
-            this.ok(res, newAdmin);
+            this.ok(res, result);
         });
     }
 };

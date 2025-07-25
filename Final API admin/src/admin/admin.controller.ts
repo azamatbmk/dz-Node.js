@@ -10,6 +10,7 @@ import { AdminRegisterDto } from "./dto/admin.register.dto";
 import { AdminLoginDto } from "./dto/admin.login.dto";
 import { AdminEntity } from "./admin.entity";
 import { IAdminService } from "./admin.service.interface";
+import { ValidateMidlleware } from "../common/validate.midlleware";
 
 @injectable()
 export class AdminController extends BaseController implements IAdminController {
@@ -19,8 +20,17 @@ export class AdminController extends BaseController implements IAdminController 
     ) {
         super(loggerService)
         this.bindRoutes([
-            { path: '/login', method: 'post', func: this.login },
-            { path: '/register', method: 'post', func: this.register }
+            { 
+                path: '/login', 
+                method: 'post', 
+                func: this.login, 
+            },
+            { 
+                path: '/register', 
+                method: 'post', 
+                func: this.register,
+                middlewares: [new ValidateMidlleware(AdminRegisterDto)] 
+            }
         ])
     }
 
@@ -34,7 +44,7 @@ export class AdminController extends BaseController implements IAdminController 
          res: Response, next: NextFunction
         ): Promise<void> {
             const result = await this.adminService.createAdmin(body)
-            this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`)
             this.ok<AdminEntity | null>(res, result);
+            this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`)
     }
 }
