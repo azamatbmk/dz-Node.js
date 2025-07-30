@@ -5,6 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,11 +24,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const inversify_1 = require("inversify");
 const admin_entity_1 = require("./admin.entity");
+const types_1 = require("../types");
 let AdminService = class AdminService {
+    constructor(configService) {
+        this.configService = configService;
+    }
     createAdmin(_a) {
         return __awaiter(this, arguments, void 0, function* ({ email, name, password }) {
             const newAdmin = new admin_entity_1.AdminEntity(email, name);
-            yield newAdmin.setPassword(password);
+            yield newAdmin.setPassword(password, Number(this.configService.get('SALT')));
             return newAdmin;
         });
     }
@@ -33,5 +43,7 @@ let AdminService = class AdminService {
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([
-    (0, inversify_1.injectable)()
+    (0, inversify_1.injectable)(),
+    __param(0, (0, inversify_1.inject)(types_1.TYPES.IConfigService)),
+    __metadata("design:paramtypes", [Object])
 ], AdminService);

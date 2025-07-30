@@ -20,54 +20,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.App = void 0;
-const express_1 = __importDefault(require("express"));
-const admin_controller_1 = require("./admin/admin.controller");
+exports.PrismaService = void 0;
 const inversify_1 = require("inversify");
-const types_1 = require("./types");
-const body_parser_1 = require("body-parser");
-const prisma_service_1 = require("./database/prisma.service");
-let App = class App {
-    constructor(logger, adminController, exceptionFilter, configService, prismaService) {
+const types_1 = require("../types");
+const prisma_1 = require("../generated/prisma");
+let PrismaService = class PrismaService {
+    constructor(logger) {
         this.logger = logger;
-        this.adminController = adminController;
-        this.exceptionFilter = exceptionFilter;
-        this.configService = configService;
-        this.prismaService = prismaService;
-        this.app = (0, express_1.default)();
-        this.port = 8000;
+        this.client = new prisma_1.PrismaClient();
     }
-    useRoutes() {
-        this.app.use('/admin', this.adminController.router);
-    }
-    useMiddleware() {
-        this.app.use((0, body_parser_1.json)());
-    }
-    useExceptionFilter() {
-        this.app.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
-    }
-    init() {
+    connect() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.useMiddleware();
-            this.useRoutes();
-            this.useExceptionFilter();
-            yield this.prismaService.connect();
-            this.server = this.app.listen(this.port);
-            this.logger.info(`Сервер запущен на https://localhost:${this.port} порту`);
+            try {
+                yield this.client.$connect();
+                this.logger.info('[PrismaService] Успешно подключились к базе данных');
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    this.logger.error('[PrismaService] Ошибка подключения к базе данных ' + error.message);
+                }
+            }
+        });
+    }
+    disconnect() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.client.$disconnect();
         });
     }
 };
-exports.App = App;
-exports.App = App = __decorate([
+exports.PrismaService = PrismaService;
+exports.PrismaService = PrismaService = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(types_1.TYPES.ILogger)),
-    __param(1, (0, inversify_1.inject)(types_1.TYPES.IAdminController)),
-    __param(2, (0, inversify_1.inject)(types_1.TYPES.IExceptionFilter)),
-    __param(3, (0, inversify_1.inject)(types_1.TYPES.IConfigService)),
-    __param(4, (0, inversify_1.inject)(types_1.TYPES.PrismaService)),
-    __metadata("design:paramtypes", [Object, admin_controller_1.AdminController, Object, Object, prisma_service_1.PrismaService])
-], App);
+    __metadata("design:paramtypes", [Object])
+], PrismaService);

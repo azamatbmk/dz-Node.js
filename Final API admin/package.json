@@ -14,15 +14,18 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "prisma": "^6.13.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@prisma/client": "^6.13.0",
     "@types/express": "^5.0.3",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "inversify": "^7.0.0-alpha.5",
     "reflect-metadata": "^0.2.2",

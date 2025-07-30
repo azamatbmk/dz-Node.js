@@ -20,7 +20,7 @@ export class AdminEntity {
         return this._password;
     }
 
-    public async setPassword(pass: string) {
-        this._password = await hash(pass, 10)
+    public async setPassword(pass: string, salt: string | number) {
+        this._password = await hash(pass, salt)
     }
 }

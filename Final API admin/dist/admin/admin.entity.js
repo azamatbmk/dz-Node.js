@@ -25,9 +25,9 @@ class AdminEntity {
     get password() {
         return this._password;
     }
-    setPassword(pass) {
+    setPassword(pass, salt) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._password = yield (0, bcryptjs_1.hash)(pass, 10);
+            this._password = yield (0, bcryptjs_1.hash)(pass, salt);
         });
     }
 }

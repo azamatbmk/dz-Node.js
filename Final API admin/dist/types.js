@@ -7,4 +7,6 @@ exports.TYPES = {
     IAdminService: Symbol.for('IAdminService'),
     ILogger: Symbol.for('ILogger'),
     IExceptionFilter: Symbol.for('IExceptionFilter'),
+    IConfigService: Symbol.for('IConfigService'),
+    PrismaService: Symbol.for('PrismaService'),
 };

@@ -39,9 +39,13 @@ let AdminController = class AdminController extends base_controller_1.BaseContro
                 path: '/login',
                 method: 'post',
                 func: this.login,
-                middlewares: [new validate_midlleware_1.ValidateMidlleware(admin_register_dto_1.AdminRegisterDto)]
             },
-            { path: '/register', method: 'post', func: this.register }
+            {
+                path: '/register',
+                method: 'post',
+                func: this.register,
+                middlewares: [new validate_midlleware_1.ValidateMidlleware(admin_register_dto_1.AdminRegisterDto)]
+            }
         ]);
     }
     login(req, res, next) {
@@ -51,8 +55,8 @@ let AdminController = class AdminController extends base_controller_1.BaseContro
     register(_a, res_1, next_1) {
         return __awaiter(this, arguments, void 0, function* ({ body }, res, next) {
             const result = yield this.adminService.createAdmin(body);
-            this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`);
             this.ok(res, result);
+            this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`);
         });
     }
 };

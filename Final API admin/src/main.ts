@@ -9,13 +9,18 @@ import { TYPES } from "./types";
 import { IAdminController } from "./admin/admin.controller.interface";
 import { IAdminService } from "./admin/admin.service.interface";
 import { AdminService } from "./admin/admin.service";
+import { IConfigService } from "./config/config.service.interface";
+import { ConfigService } from "./config/config.service";
+import { PrismaService } from "./database/prisma.service";
 
 const appContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
-    options.bind<ILogger>(TYPES.ILogger).to(LoggerService);
+    options.bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
     options.bind<IExceptionFilter>(TYPES.IExceptionFilter).to(ExceptionFilter);
     options.bind<IAdminController>(TYPES.IAdminController).to(AdminController);
     options.bind<App>(TYPES.Application).to(App);
     options.bind<IAdminService>(TYPES.IAdminService).to(AdminService);
+    options.bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope();
+    options.bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 });
 
 function bootstrap() {
