@@ -11,6 +11,7 @@ const types_1 = require("./types");
 const admin_service_1 = require("./admin/admin.service");
 const config_service_1 = require("./config/config.service");
 const prisma_service_1 = require("./database/prisma.service");
+const admin_repository_1 = require("./admin/admin.repository");
 const appContainerModule = new inversify_1.ContainerModule((options) => {
     options.bind(types_1.TYPES.ILogger).to(logger_service_1.LoggerService).inSingletonScope();
     options.bind(types_1.TYPES.IExceptionFilter).to(exception_filter_1.ExceptionFilter);
@@ -19,6 +20,7 @@ const appContainerModule = new inversify_1.ContainerModule((options) => {
     options.bind(types_1.TYPES.IAdminService).to(admin_service_1.AdminService);
     options.bind(types_1.TYPES.IConfigService).to(config_service_1.ConfigService).inSingletonScope();
     options.bind(types_1.TYPES.PrismaService).to(prisma_service_1.PrismaService).inSingletonScope();
+    options.bind(types_1.TYPES.IAdminRepository).to(admin_repository_1.AdminRepository).inSingletonScope();
 });
 function bootstrap() {
     const appContainer = new inversify_1.Container();

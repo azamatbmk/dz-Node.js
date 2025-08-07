@@ -28,6 +28,7 @@ require("reflect-metadata");
 const inversify_1 = require("inversify");
 const types_1 = require("../types");
 const admin_register_dto_1 = require("./dto/admin.register.dto");
+const admin_login_dto_1 = require("./dto/admin.login.dto");
 const validate_midlleware_1 = require("../common/validate.midlleware");
 let AdminController = class AdminController extends base_controller_1.BaseController {
     constructor(loggerService, adminService) {
@@ -39,6 +40,7 @@ let AdminController = class AdminController extends base_controller_1.BaseContro
                 path: '/login',
                 method: 'post',
                 func: this.login,
+                middlewares: [new validate_midlleware_1.ValidateMidlleware(admin_login_dto_1.AdminLoginDto)]
             },
             {
                 path: '/register',
@@ -49,13 +51,19 @@ let AdminController = class AdminController extends base_controller_1.BaseContro
         ]);
     }
     login(req, res, next) {
-        console.log(req.body);
-        next(new http_error_1.HTTPError(401, 'Ошибка авторизации', 'login'));
+        const result = this.adminService.validateAdmin(req.body);
+        if (!result) {
+            return next(new http_error_1.HTTPError(401, 'Ошибка авторизации', 'login'));
+        }
+        this.ok(res, {});
     }
     register(_a, res_1, next_1) {
         return __awaiter(this, arguments, void 0, function* ({ body }, res, next) {
             const result = yield this.adminService.createAdmin(body);
-            this.ok(res, result);
+            if (!result) {
+                return next(new http_error_1.HTTPError(422, 'Такой пользователь уже существует'));
+            }
+            this.ok(res, { email: result.email, id: result.id });
             this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`);
         });
     }

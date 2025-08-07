@@ -21,47 +21,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminService = void 0;
+exports.AdminRepository = void 0;
 const inversify_1 = require("inversify");
-const admin_entity_1 = require("./admin.entity");
 const types_1 = require("../types");
-let AdminService = class AdminService {
-    constructor(configService, adminRepository) {
-        this.configService = configService;
-        this.adminRepository = adminRepository;
+const prisma_service_1 = require("../database/prisma.service");
+let AdminRepository = class AdminRepository {
+    constructor(prismaService) {
+        this.prismaService = prismaService;
     }
-    createAdmin(_a) {
-        return __awaiter(this, arguments, void 0, function* ({ email, name, password }) {
-            const newAdmin = new admin_entity_1.AdminEntity(email, name);
-            yield newAdmin.setPassword(password, Number(this.configService.get('SALT')));
-            const existedAdmin = yield this.adminRepository.find(email);
-            if (existedAdmin) {
-                return null;
-            }
-            return this.adminRepository.create(newAdmin);
+    create(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ email, password, name }) {
+            return this.prismaService.client.adminModel.create({
+                data: {
+                    email,
+                    password,
+                    name
+                }
+            });
         });
     }
-    validateAdmin(_a) {
-        return __awaiter(this, arguments, void 0, function* ({ email, password }) {
-            const existedAdmin = yield this.adminRepository.find(email);
-            if (!existedAdmin) {
-                return false;
-            }
-            if (existedAdmin.name === 'string') {
-                const newAdmin = new admin_entity_1.AdminEntity(existedAdmin.email, existedAdmin.name, existedAdmin.password);
-                return newAdmin.comparePassword(password);
-            }
-            else {
-                return false;
-            }
+    find(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.prismaService.client.adminModel.findFirst({
+                where: {
+                    email
+                }
+            });
         });
     }
-    ;
 };
-exports.AdminService = AdminService;
-exports.AdminService = AdminService = __decorate([
+exports.AdminRepository = AdminRepository;
+exports.AdminRepository = AdminRepository = __decorate([
     (0, inversify_1.injectable)(),
-    __param(0, (0, inversify_1.inject)(types_1.TYPES.IConfigService)),
-    __param(1, (0, inversify_1.inject)(types_1.TYPES.IAdminRepository)),
-    __metadata("design:paramtypes", [Object, Object])
-], AdminService);
+    __param(0, (0, inversify_1.inject)(types_1.TYPES.PrismaService)),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], AdminRepository);

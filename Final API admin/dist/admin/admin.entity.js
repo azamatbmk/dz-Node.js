@@ -12,9 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminEntity = void 0;
 const bcryptjs_1 = require("bcryptjs");
 class AdminEntity {
-    constructor(_email, _name) {
+    constructor(_email, _name, passwordHash) {
         this._email = _email;
         this._name = _name;
+        if (passwordHash) {
+            this._password = passwordHash;
+        }
     }
     get email() {
         return this._email;
@@ -28,6 +31,11 @@ class AdminEntity {
     setPassword(pass, salt) {
         return __awaiter(this, void 0, void 0, function* () {
             this._password = yield (0, bcryptjs_1.hash)(pass, salt);
+        });
+    }
+    comparePassword(pass) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (0, bcryptjs_1.compare)(pass, this._password);
         });
     }
 }

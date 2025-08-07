@@ -23,7 +23,8 @@ export class AdminController extends BaseController implements IAdminController 
             { 
                 path: '/login', 
                 method: 'post', 
-                func: this.login, 
+                func: this.login,
+                middlewares: [new ValidateMidlleware(AdminLoginDto)] 
             },
             { 
                 path: '/register', 
@@ -35,16 +36,22 @@ export class AdminController extends BaseController implements IAdminController 
     }
 
     login(req: Request<{}, {}, AdminLoginDto>, res: Response, next: NextFunction) {
-        console.log(req.body)
-        next(new HTTPError(401, 'Ошибка авторизации', 'login'))
+        const result = this.adminService.validateAdmin(req.body);
+        if (!result) {
+            return next(new HTTPError(401, 'Ошибка авторизации', 'login'))
+        }
+        this.ok(res, {});
     }
 
     async register(
         { body }: Request<{}, {}, AdminRegisterDto>,
          res: Response, next: NextFunction
         ): Promise<void> {
-            const result = await this.adminService.createAdmin(body)
-            this.ok<AdminEntity | null>(res, result);
+            const result = await this.adminService.createAdmin(body);
+            if (!result) {
+                return next( new HTTPError(422, 'Такой пользователь уже существует'))
+            }
+            this.ok(res, { email: result.email, id: result.id });
             this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`)
     }
 }
