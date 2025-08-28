@@ -7,6 +7,8 @@ import { IConfigService } from "../config/config.service.interface";
 import { TYPES } from "../types";
 import { IAdminRepository } from "./admin.repository.interface";
 import { AdminModel } from "../generated/prisma";
+import { sign } from "jsonwebtoken";
+
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -32,11 +34,34 @@ export class AdminService implements IAdminService {
         if (!existedAdmin) {
             return false;
         }
-        if (existedAdmin.name === 'string') {
+        if (typeof existedAdmin.name === 'string') {
             const newAdmin = new AdminEntity(existedAdmin.email, existedAdmin.name, existedAdmin.password);
-            return newAdmin.comparePassword(password)
+            return newAdmin.comparePassword(password);
         } else {
-            return false
+            return false;
         }
     };
+
+    async signJWT(dto: AdminLoginDto, secret: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            sign(
+                {
+                    email: dto.email,
+                    iat: Math.floor(Date.now() / 1000)
+                },
+                secret,
+                {
+                    algorithm: 'HS256'
+                },
+                (err, token) => {
+                    if(err) {
+                        reject(err)
+                    }
+                   return resolve(token as string)
+                }
+            )
+        })
+    };
+
+    
 }

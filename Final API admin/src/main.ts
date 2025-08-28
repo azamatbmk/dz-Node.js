@@ -13,6 +13,8 @@ import { IConfigService } from "./config/config.service.interface";
 import { ConfigService } from "./config/config.service";
 import { PrismaService } from "./database/prisma.service";
 import { AdminRepository } from "./admin/admin.repository";
+import { IProductController } from "./product/product.controller.interface";
+import { ProductController } from "./product/product.controller";
 
 const appContainerModule = new ContainerModule((options: ContainerModuleLoadOptions) => {
     options.bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
@@ -23,6 +25,7 @@ const appContainerModule = new ContainerModule((options: ContainerModuleLoadOpti
     options.bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope();
     options.bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
     options.bind<AdminRepository>(TYPES.IAdminRepository).to(AdminRepository).inSingletonScope();
+    options.bind<IProductController>(TYPES.IProductController).to(ProductController).inSingletonScope();
 });
 
 function bootstrap() {

@@ -6,4 +6,5 @@ import { AdminRegisterDto } from "./dto/admin.register.dto";
 export interface IAdminService {
     createAdmin: (dto: AdminRegisterDto) => Promise<AdminModel | null>;
     validateAdmin: (dto: AdminLoginDto) => Promise<boolean>;
+    signJWT: (dto: AdminLoginDto, secret: string) => Promise<string>;
 }

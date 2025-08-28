@@ -8,6 +8,8 @@ import { IExceptionFilter } from './errors/exception.filter.interface';
 import { json } from 'body-parser';
 import { IConfigService } from './config/config.service.interface';
 import { PrismaService } from './database/prisma.service';
+import { AuthMiddleware } from './common/auth.middleware';
+import { ProductController } from './product/product.controller';
 
 @injectable()
 export class App {
@@ -21,6 +23,7 @@ export class App {
         @inject(TYPES.IExceptionFilter) private exceptionFilter: IExceptionFilter,
         @inject(TYPES.IConfigService) private configService: IConfigService,
         @inject(TYPES.PrismaService) private prismaService: PrismaService,
+        @inject(TYPES.IProductController) private productController: ProductController,
     ) {
         this.app = express();
         this.port = 8000;
@@ -28,10 +31,13 @@ export class App {
 
     useRoutes() {
         this.app.use('/admin', this.adminController.router)
+        this.app.use('/product', this.productController.router)
     }
 
     useMiddleware() {
         this.app.use(json())
+        const authMiddleware = new AuthMiddleware(this.configService.get('SECRET'))
+        this.app.use(authMiddleware.execute.bind(authMiddleware))
     }
 
     useExceptionFilter() {

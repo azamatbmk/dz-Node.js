@@ -25,6 +25,7 @@ exports.AdminService = void 0;
 const inversify_1 = require("inversify");
 const admin_entity_1 = require("./admin.entity");
 const types_1 = require("../types");
+const jsonwebtoken_1 = require("jsonwebtoken");
 let AdminService = class AdminService {
     constructor(configService, adminRepository) {
         this.configService = configService;
@@ -47,13 +48,31 @@ let AdminService = class AdminService {
             if (!existedAdmin) {
                 return false;
             }
-            if (existedAdmin.name === 'string') {
+            if (typeof existedAdmin.name === 'string') {
                 const newAdmin = new admin_entity_1.AdminEntity(existedAdmin.email, existedAdmin.name, existedAdmin.password);
                 return newAdmin.comparePassword(password);
             }
             else {
                 return false;
             }
+        });
+    }
+    ;
+    signJWT(dto, secret) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                (0, jsonwebtoken_1.sign)({
+                    email: dto.email,
+                    iat: Math.floor(Date.now() / 1000)
+                }, secret, {
+                    algorithm: 'HS256'
+                }, (err, token) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    return resolve(token);
+                });
+            });
         });
     }
     ;

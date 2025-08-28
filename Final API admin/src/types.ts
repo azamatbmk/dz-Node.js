@@ -7,4 +7,5 @@ export const TYPES = {
     IConfigService: Symbol.for('IConfigService'),
     PrismaService: Symbol.for('PrismaService'),
     IAdminRepository: Symbol.for('IAdminRepository'),
+    IProductController: Symbol.for('IProductController'),
 }

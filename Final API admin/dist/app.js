@@ -31,21 +31,27 @@ const inversify_1 = require("inversify");
 const types_1 = require("./types");
 const body_parser_1 = require("body-parser");
 const prisma_service_1 = require("./database/prisma.service");
+const auth_middleware_1 = require("./common/auth.middleware");
+const product_controller_1 = require("./product/product.controller");
 let App = class App {
-    constructor(logger, adminController, exceptionFilter, configService, prismaService) {
+    constructor(logger, adminController, exceptionFilter, configService, prismaService, productController) {
         this.logger = logger;
         this.adminController = adminController;
         this.exceptionFilter = exceptionFilter;
         this.configService = configService;
         this.prismaService = prismaService;
+        this.productController = productController;
         this.app = (0, express_1.default)();
         this.port = 8000;
     }
     useRoutes() {
         this.app.use('/admin', this.adminController.router);
+        this.app.use('/product', this.productController.router);
     }
     useMiddleware() {
         this.app.use((0, body_parser_1.json)());
+        const authMiddleware = new auth_middleware_1.AuthMiddleware(this.configService.get('SECRET'));
+        this.app.use(authMiddleware.execute.bind(authMiddleware));
     }
     useExceptionFilter() {
         this.app.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
@@ -69,5 +75,7 @@ exports.App = App = __decorate([
     __param(2, (0, inversify_1.inject)(types_1.TYPES.IExceptionFilter)),
     __param(3, (0, inversify_1.inject)(types_1.TYPES.IConfigService)),
     __param(4, (0, inversify_1.inject)(types_1.TYPES.PrismaService)),
-    __metadata("design:paramtypes", [Object, admin_controller_1.AdminController, Object, Object, prisma_service_1.PrismaService])
+    __param(5, (0, inversify_1.inject)(types_1.TYPES.IProductController)),
+    __metadata("design:paramtypes", [Object, admin_controller_1.AdminController, Object, Object, prisma_service_1.PrismaService,
+        product_controller_1.ProductController])
 ], App);

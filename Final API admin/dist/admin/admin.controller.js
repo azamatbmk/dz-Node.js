@@ -31,10 +31,11 @@ const admin_register_dto_1 = require("./dto/admin.register.dto");
 const admin_login_dto_1 = require("./dto/admin.login.dto");
 const validate_midlleware_1 = require("../common/validate.midlleware");
 let AdminController = class AdminController extends base_controller_1.BaseController {
-    constructor(loggerService, adminService) {
+    constructor(loggerService, adminService, configService) {
         super(loggerService);
         this.loggerService = loggerService;
         this.adminService = adminService;
+        this.configService = configService;
         this.bindRoutes([
             {
                 path: '/login',
@@ -47,15 +48,24 @@ let AdminController = class AdminController extends base_controller_1.BaseContro
                 method: 'post',
                 func: this.register,
                 middlewares: [new validate_midlleware_1.ValidateMidlleware(admin_register_dto_1.AdminRegisterDto)]
+            },
+            {
+                path: '/info',
+                method: 'get',
+                func: this.info,
+                middlewares: []
             }
         ]);
     }
     login(req, res, next) {
-        const result = this.adminService.validateAdmin(req.body);
-        if (!result) {
-            return next(new http_error_1.HTTPError(401, 'Ошибка авторизации', 'login'));
-        }
-        this.ok(res, {});
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this.adminService.validateAdmin(req.body);
+            if (!result) {
+                return next(new http_error_1.HTTPError(401, 'Ошибка авторизации', 'login'));
+            }
+            const token = yield this.adminService.signJWT(req.body, this.configService.get('SECRET'));
+            this.ok(res, token);
+        });
     }
     register(_a, res_1, next_1) {
         return __awaiter(this, arguments, void 0, function* ({ body }, res, next) {
@@ -67,11 +77,17 @@ let AdminController = class AdminController extends base_controller_1.BaseContro
             this.loggerService.info(`[AdminController] Зарегистрировался пользователь ${body.name} с почтой ${body.email}`);
         });
     }
+    info(_a, res_1, next_1) {
+        return __awaiter(this, arguments, void 0, function* ({ admin }, res, next) {
+            this.ok(res, { email: admin });
+        });
+    }
 };
 exports.AdminController = AdminController;
 exports.AdminController = AdminController = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(types_1.TYPES.ILogger)),
     __param(1, (0, inversify_1.inject)(types_1.TYPES.IAdminService)),
-    __metadata("design:paramtypes", [Object, Object])
+    __param(2, (0, inversify_1.inject)(types_1.TYPES.IConfigService)),
+    __metadata("design:paramtypes", [Object, Object, Object])
 ], AdminController);
