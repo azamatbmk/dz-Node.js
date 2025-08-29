@@ -27,4 +27,4 @@ function calculator(firstNum, secondNum, operation) {
     return operation;
 };
 
-console.log(calculator(firstNum, secondNum, operation))
+console.log(calculator(firstNum, secondNum, operation));
